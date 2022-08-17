@@ -2,24 +2,39 @@ import React from 'react'
 import IngredientList from './Ingredient/IngredientList.component';
 
 export default function Recipe(props) {
-  console.log(`props before destructuring ${JSON.stringify(props)}`);
+  // console.log(`...props before destructuring ${JSON.stringify({...props})}`);
   const {
+    id,
     name,
     servings,
     cookTime,
     instructions,
-    ingredients
+    ingredients,
+    handleDelete
    } = props;
+  console.log(`props: ${JSON.stringify(props)}`);
 
   //  const ingredientProp = {ingredients};
   //  const spreadIngredientProp = ...ingredientProp;
+  // function del(id){
+  //   handleDelete(id);
+  // }
   return (
+    <>
     <div className="recipe">
       <div className="recipe__header">
         <h3 className="recipe__title">{name}</h3>
         <div>
           <button className="btn btn--primary mr-1">Edit</button>
-          <button className="btn btn--danger">Delete</button>
+
+          <button
+            className="btn btn--danger"
+            onClick={()=>handleDelete(id)}
+            // onClick={this.handleDelete.bind(id)}
+
+            >
+            Delete
+          </button>
         </div>
       </div>
       <div className="recipe__row">
@@ -41,6 +56,7 @@ export default function Recipe(props) {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
