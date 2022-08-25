@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import IngredientList from './Ingredient/IngredientList.component';
+import { recipeContext } from './App';
 
 export default function Recipe(props) {
   // console.log(`...props before destructuring ${JSON.stringify({...props})}`);
@@ -10,9 +11,10 @@ export default function Recipe(props) {
     cookTime,
     instructions,
     ingredients,
-    handleDelete
    } = props;
-  console.log(`props: ${JSON.stringify(props)}`);
+  // console.log(`props: ${JSON.stringify(props)}`);
+
+  const {handleDelete, handleSelectedRecipe} = useContext(recipeContext);
 
   //  const ingredientProp = {ingredients};
   //  const spreadIngredientProp = ...ingredientProp;
@@ -25,14 +27,18 @@ export default function Recipe(props) {
       <div className="recipe__header">
         <h3 className="recipe__title">{name}</h3>
         <div>
-          <button className="btn btn--primary mr-1">Edit</button>
+          <button
+            className="btn btn--primary mr-1"
+            onClick={() => {handleSelectedRecipe(id)}}
+          >
+            Edit
+          </button>
+          {/* // onClick={this.handleDelete.bind(id)} */}
 
           <button
             className="btn btn--danger"
             onClick={()=>handleDelete(id)}
-            // onClick={this.handleDelete.bind(id)}
-
-            >
+          >
             Delete
           </button>
         </div>

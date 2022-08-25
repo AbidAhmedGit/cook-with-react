@@ -1,45 +1,100 @@
 import RecipeList from "./RecipeList.component";
 import '../css/app.css'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import RecipeEdit from "./RecipeEdit.component";
+
+export const recipeContext = React.createContext()
+const  LOCAL_STORAGE_KEY = 'cookingWithReact.recipes'
+
+
 
 function App() {
-  const [recipes, setRecipes] = useState(sampleRecipes);
+  const [recipes, setRecipes] = useState(() => {
+    const recipeJSON = localStorage.getItem(LOCAL_STORAGE_KEY)
+    // const recipeJSON = null
+    if (recipeJSON == null) {
+      return sampleRecipes
+    } else {
+      return JSON.parse(recipeJSON)
+    }
+  });
 
-  console.log(JSON.stringify(...recipes))
+  const [selectedRecipeId, setSelectedRecipeId] = useState();
+  // using id to find the selected recipe
+  const selectedRecipe = recipes.find(recipe => recipe.id === selectedRecipeId)
+
+  // useEffect for setting localStorage
+  useEffect(() => {
+    localStorage.setItem( LOCAL_STORAGE_KEY, JSON.stringify(recipes))
+  }, [recipes]);
+
+
+  const recipeContextValue = {
+    handleAddRecipe,
+    handleDelete,
+    handleSelectedRecipe,
+    handleRecipeChange
+  }
 
   function handleAddRecipe() {
     const template = {
       id: uuidv4(),
-      name: 'New',
+      name: '',
       servings: 1,
-      cookTime: '1:00',
-      instructions: "instructions",
+      cookTime: '',
+      instructions: "",
       ingredients: [
         {
           id: uuidv4(),
-          name: 'Name',
-          amount: '2 Pounds'
+          name: '',
+          amount: ''
         }
       ]
     }
-
+    setSelectedRecipeId(template.id)
     setRecipes([...recipes, template])
   }
 
   function handleDelete(id) {
-    const filteredRecipes = recipes.filter(recipe => recipe.id != id)
+    if ((selectedRecipeId) !== null && (selectedRecipe === id)) {
+      setSelectedRecipeId(undefined)
+    }
+    const filteredRecipes = recipes.filter(recipe => recipe.id !== id)
     setRecipes(filteredRecipes)
+  }
+
+  // function to setSelectedRecipeId retrieved from recipe
+  function handleSelectedRecipe(id) {
+    setSelectedRecipeId(undefined);
+    setSelectedRecipeId(id);
+  }
+
+  // function to introduce changes to our recipe to the recipes state
+  // takes in id and changed recipe as parameter
+  function handleRecipeChange(id, recipe){
+    // make a copy of the recipes state
+    const newRecipes = [...recipes];
+    // now we find the index of the recipe that we are changing in recipes
+    const idx = recipes.findIndex(r => r.id === id);
+    // use idx to introduce the change to newRecipes
+    newRecipes[idx] = recipe;
+    // now that our newRecipes is the recipes state we want we set our setRecipes to newRecipes
+    setRecipes(newRecipes)
   }
 
   return (
     <div>
       {/* <>------------------APP-------------------</> */}
-      <RecipeList
-        recipes={recipes}
-        handleAddRecipe={handleAddRecipe}
-        handleDelete={handleDelete}
-      />
+
+      <recipeContext.Provider value={recipeContextValue}>
+        <RecipeList
+          recipes={recipes}
+        />
+        {(selectedRecipe) && <RecipeEdit recipe={selectedRecipe}/>}
+      </recipeContext.Provider>
+
+
     </div>
   );
 }

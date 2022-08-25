@@ -1,16 +1,18 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import Recipe from './Recipe.component'
+
+import { recipeContext } from './App';
 
 export default function RecipeList(props) {
 
+  const {handleAddRecipe} = useContext(recipeContext)
+
   const {
     recipes,
-    handleAddRecipe,
-    handleDelete,
   } = props;
 
-    console.log(`recipeList//recipes: ${JSON.stringify(recipes)}`)
-    console.log(`recipeList//...recipes: ${JSON.stringify(...recipes)}`)
+    // console.log(`recipeList//recipes: ${JSON.stringify(recipes)}`)
+    // console.log(`recipeList//...recipes: ${JSON.stringify(...recipes)}`)
 
   return (
     <div className="recipe-list">
@@ -20,7 +22,6 @@ export default function RecipeList(props) {
             <Recipe
               key={recipe.id}
               {...recipe}
-              handleDelete={handleDelete}
             />
           )
         })}
@@ -28,7 +29,7 @@ export default function RecipeList(props) {
       <div className="recipe-list__add-recipe-btn-container">
         <button
           className="btn btn--primary"
-          onClick={handleAddRecipe}
+          onClick={()=>handleAddRecipe()}
         >
             Add Recipe
         </button>
