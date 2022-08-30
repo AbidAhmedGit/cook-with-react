@@ -56,7 +56,7 @@ export default function RecipeEdit({recipe}) {
           name="name"
           id="name"
           className="recipe-edit__input"
-          defaultValue={recipe.name}
+          value={recipe.name}
           onInput={e=>handleChange({name: e.target.value})}
           />
         <label
@@ -69,7 +69,7 @@ export default function RecipeEdit({recipe}) {
           name="cookTime"
           id="cookTime"
           className="recipe-edit__input"
-          defaultValue={recipe.cookTime}
+          value={recipe.cookTime}
           onInput={e=> handleChange({cookTime: e.target.value})}
           />
         <label
@@ -83,7 +83,7 @@ export default function RecipeEdit({recipe}) {
           name="servings"
           id="servings"
           className="recipe-edit__input"
-          defaultValue={recipe.servings}
+          value={recipe.servings}
           onInput={e=>handleChange({servings: e.target.value})}
           />
         <label
@@ -95,7 +95,7 @@ export default function RecipeEdit({recipe}) {
           name="instructions"
           className="recipe-edit__input"
           id="instructions"
-          defaultValue={recipe.instructions}
+          value={recipe.instructions}
           onInput={e=>handleChange({instructions: e.target.value})}
           ></textarea>
       </div>
